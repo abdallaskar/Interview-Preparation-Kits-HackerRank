@@ -1,10 +1,10 @@
 /*
  ============================================================================
- Name        : Lonly_Integer.c
+ Name        : Flipping_the_Matrix.c
  Author      : Abdalla Sakr
  Version     :
  Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
+ Description : Flipping the Matrix
  ============================================================================
  */
 
@@ -25,53 +25,75 @@ char* rtrim(char*);
 char** split_string(char*);
 
 int parse_int(char*);
-int arr[101]={0};
+
+
+
+int max(int num1,int num2)
+{
+    if(num1>num2)
+    {
+        return num1;
+    }
+    else
+    {
+        return num2;
+    }
+}
+
 /*
- * Complete the 'lonelyinteger' function below.
+ * Complete the 'flippingMatrix' function below.
  *
  * The function is expected to return an INTEGER.
- * The function accepts INTEGER_ARRAY a as parameter.
+ * The function accepts 2D_INTEGER_ARRAY matrix as parameter.
  */
 
-int lonelyinteger(int a_count, int* a) {
-    int unique = 0;
-    for (int i =0;  i < a_count ; i ++){
-        arr[a[i]]++;
-    }
-    for(int i =0; i < 101 ; i++)
-    {
-        if((arr[i]) == 1)
+int flippingMatrix(int matrix_rows, int matrix_columns, int** matrix) {
+        long result = 0;
+        for(int i =0; i < matrix_rows/2 ; i++)
         {
-            unique = i;
-            break;
-        }
+            for(int j =0; j < matrix_columns/2; j++)
+            {
+                int index1 = matrix_rows-1-i;
+                int index2 = matrix_columns-1-j;
 
-    }
-    return unique;
+                int maxnumber = max(max(max(matrix[i][j],matrix[i][index2]),    matrix  [index1][j]),matrix[index1][index2]);
+                result += maxnumber;
+            }
+        }
+        return result;
 }
 
 int main()
 {
     FILE* fptr = fopen(getenv("OUTPUT_PATH"), "w");
 
-    int n = parse_int(ltrim(rtrim(readline())));
+    int q = parse_int(ltrim(rtrim(readline())));
 
-    char** a_temp = split_string(rtrim(readline()));
+    for (int q_itr = 0; q_itr < q; q_itr++) {
+        int n = parse_int(ltrim(rtrim(readline())));
 
-    int* a = malloc(n * sizeof(int));
+        int** matrix = malloc((2 * n) * sizeof(int*));
 
-    for (int i = 0; i < n; i++) {
-        int a_item = parse_int(*(a_temp + i));
+        for (int i = 0; i < 2 * n; i++) {
+            *(matrix + i) = malloc((2 * n) * (sizeof(int)));
 
-        *(a + i) = a_item;
+            char** matrix_item_temp = split_string(rtrim(readline()));
+
+            for (int j = 0; j < 2 * n; j++) {
+                int matrix_item = parse_int(*(matrix_item_temp + j));
+
+                *(*(matrix + i) + j) = matrix_item;
+            }
+        }
+
+        int result = flippingMatrix(2 * n, 2 * n, matrix);
+
+        fprintf(fptr, "%d\n", result);
+        printf("%d",result);
     }
 
-    int result = lonelyinteger(n, a);
-
-    fprintf(fptr, "%d\n", result);
-
     fclose(fptr);
-    printf("%d",result);
+
     return 0;
 }
 
@@ -194,3 +216,4 @@ int parse_int(char* str) {
 
     return value;
 }
+
